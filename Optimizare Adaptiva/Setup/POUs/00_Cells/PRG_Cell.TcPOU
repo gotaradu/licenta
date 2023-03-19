@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="PRG_Cell" Id="{84bb5305-1f2c-4f33-a4b0-2b71b2991475}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Cell
+VAR
+	
+(* Declaration of all instances*)
+	Instance_Conveyor					:FB_Conveyor;
+	Instance_Robot						:FB_Robot;
+	Instance_Drilling					:FB_Drilling;
+	Instance_Drilling1					:FB_Drilling;
+	Instance_Metalization				:FB_Metalization;
+	Instance_Test_1						:FB_Test_1;
+	Instance_Test_2						:FB_Test_1;
+	Instance_Test_3 					:FB_Test_1;
+	
+	Instance_Opt						:FB_Optimizare;
+	
+	CommIn								:Type_CommIn_Robot;
+	CommOut								:Type_CommOut_Robot;
+
+	
+	mFirst								:BOOL;	
+	m_StartAuto							:BOOL;
+	m_StartRobotAuto					:BOOL:=TRUE;
+	m_ResetRobot						:BOOL;
+	
+	int_Index							:INT;
+	int_ModuleNumber					:INT;
+	
+	SFCCurrentStep						:STRING(40);
+	
+	inRe_1_Byte_0				AT %I*	:BYTE;
+	inRe_2_Byte_0				AT %I*	:BYTE;
+	inRe_3_Byte_0				AT %I*	:BYTE;
+	inRe_4_Byte_0				AT %I*	:BYTE;
+	
+	m_ResetDone					AT %Q*	:BYTE;
+	
+	FB_RAND1							:DRAND;
+	FB_RAND2							:DRAND;
+	FB_RAND3							:DRAND;
+	
+	lreal_Value1						:LREAL;
+	lreal_Value2						:LREAL;
+	lreal_Value3						:LREAL;
+	
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[A99_Communication();
+A98_Reset();
+A97_RandomNumbers();
+A50_Optimization();
+IF m_StartAuto 
+	THEN 
+		FOR int_ModuleNumber:=0 TO 11 BY 1
+			DO
+			CASE int_ModuleNumber OF 
+				0	: A00_Conveyor();
+				1	: A01_Robot();
+				2	: A02_Drilling();
+				3	: A03_Test_1();
+				4	: A03_Test_2();
+				5	: A03_Test_3();
+				6	: A04_Metalization();	
+				7	: A02_Drilling_2();						
+			END_CASE
+		END_FOR
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Action Name="A00_Conveyor" Id="{3259d0ea-eb7b-4fcf-93a0-613039c068dc}">
+      <Implementation>
+        <ST><![CDATA[(*Comunication*)
+
+
+Instance_Conveyor.ins_CommIn.s_Robot:=Instance_Robot.outs_CommOut.s_Conveyor;
+
+Instance_Conveyor();
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A01_Robot" Id="{e2178e5d-9fd5-4944-8524-8c743a5444db}">
+      <Implementation>
+        <ST><![CDATA[
+(* In Comunication *)
+
+Instance_Robot.ins_CommIn.s_Conveyor							:=Instance_Conveyor.outs_CommOut.s_Robot;
+Instance_Robot.ins_CommIn.s_Drilling							:=Instance_Drilling.outs_CommOut.s_Robot;
+Instance_Robot.ins_CommIn.s_Drilling1							:=Instance_Drilling1.outs_CommOut.s_Robot;
+Instance_Robot.ins_CommIn.s_Metalization						:=Instance_Metalization.outs_CommOut.s_Robot;
+
+
+Instance_Robot.in_Opt.s_Drilling_1.out_AverageCycleTime			:=Instance_Drilling.o_AverageCycleTime;
+Instance_Robot.in_Opt.s_Drilling_2.out_AverageCycleTime			:=Instance_Drilling1.o_AverageCycleTime;
+Instance_Robot.in_Opt.s_Conveyor.out_AverageCycleTime			:=Instance_Conveyor.o_ProcessCycleTime;
+Instance_Robot.in_Opt.s_Test_1.out_AverageCycleTime				:=Instance_Test_1.o_AverageCycleTime;
+Instance_Robot.in_Opt.s_Test_2.out_AverageCycleTime				:=Instance_Test_2.o_AverageCycleTime;
+Instance_Robot.in_Opt.s_Test_3.out_AverageCycleTime				:=Instance_Test_3.o_AverageCycleTime;
+
+Instance_Robot.ins_CommIn.s_Test_1								:=Instance_Test_1.outs_CommOut.s_Robot;
+Instance_Robot.ins_CommIn.s_Test_2								:=Instance_Test_2.outs_CommOut.s_Robot;
+Instance_Robot.ins_CommIn.s_Test_3								:=Instance_Test_3.outs_CommOut.s_Robot;
+
+Instance_Robot.inint_OptNextJob									:=Instance_Opt.outint_FinalPosition;
+
+
+Instance_Robot(inint_NoOfJobs:=6,inm_Reset:=m_ResetRobot);
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A02_Drilling" Id="{dc984a07-6754-44e8-ba1a-80bc37f311c9}">
+      <Implementation>
+        <ST><![CDATA[
+Instance_Drilling.ins_CommIn.s_Robot		:=Instance_Robot.outs_CommOut.s_Drilling;
+Instance_Drilling.inm_Reset					:=Instance_Robot.outs_Reset.outm_Reset_Drilling;
+
+Instance_Drilling(inint_Position:=2);
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A02_Drilling_2" Id="{7a6cf844-58d8-4989-b716-29dc15dc1a7e}">
+      <Implementation>
+        <ST><![CDATA[
+Instance_Drilling1.ins_CommIn.s_Robot		:=Instance_Robot.outs_CommOut.s_Drilling1;
+Instance_Drilling1.inm_Reset				:=Instance_Robot.outs_Reset.outm_Reset_Drilling2;
+
+Instance_Drilling1(inint_Position:=1);
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A03_Test_1" Id="{1efbcea1-31bd-4ab7-a7b7-e8f1603677cf}">
+      <Implementation>
+        <ST><![CDATA[Instance_Test_1.ins_CommIn.s_Robot			:=Instance_Robot.outs_CommOut.s_Test_1;
+Instance_Test_1.inm_Reset					:=Instance_Robot.outs_Reset.outm_Reset_Test1;
+
+Instance_Test_1(inint_Position:=3,inlreal_RandomNumber:=lreal_Value1);
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A03_Test_2" Id="{4b7deda4-dc1b-49fc-9eb0-4a72592c2bf6}">
+      <Implementation>
+        <ST><![CDATA[Instance_Test_2.ins_CommIn.s_Robot			:=Instance_Robot.outs_CommOut.s_Test_2;
+Instance_Test_2.inm_Reset					:=Instance_Robot.outs_Reset.outm_Reset_Test2;
+
+Instance_Test_2(inint_Position:=4,inlreal_RandomNumber:=lreal_Value2);
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A03_Test_3" Id="{e3466a45-a0e2-42eb-addd-40c097533531}">
+      <Implementation>
+        <ST><![CDATA[Instance_Test_3.ins_CommIn.s_Robot			:=Instance_Robot.outs_CommOut.s_Test_3;
+Instance_Test_3.inm_Reset					:=Instance_Robot.outs_Reset.outm_Reset_Test3;
+
+Instance_Test_3(inint_Position:=5,inlreal_RandomNumber:=lreal_Value3);
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A04_Metalization" Id="{61b1953f-f2bb-4ce8-80ba-e30cde351787}">
+      <Implementation>
+        <ST><![CDATA[Instance_Metalization.ins_CommIn.s_Robot	:=Instance_Robot.outs_CommOut.s_Metalization;
+
+Instance_Metalization();
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A50_Optimization" Id="{cd332c48-955d-4431-a3a5-b78a278c8407}">
+      <Implementation>
+        <ST><![CDATA[Instance_Opt.inint_LastPosition			:=Instance_Robot.outint_LastPosition;
+Instance_Opt.inint_NoJobAvailable		:=Instance_Robot.int_NextOrder;
+Instance_Opt.indword_StartTime			:=Instance_Robot.outdword_StartTime;
+Instance_Opt.inreal_AverageCycleTime	:=Instance_Robot.outreal_AverageCycleTime;
+Instance_Opt.inm_AvailableModules		:=Instance_Robot.out_Availabilty;
+
+Instance_Opt();]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A97_RandomNumbers" Id="{e8031163-3857-4972-97bb-605cf04f3183}">
+      <Implementation>
+        <ST><![CDATA[FB_RAND1(Seed:=20);
+FB_RAND2(Seed:=30);
+FB_RAND3(Seed:=40);
+
+IF 		FB_RAND1.Num>0.9 
+	AND FB_RAND1.Num<1
+	THEN
+		lreal_Value1:=FB_RAND1.Num;
+END_IF
+
+IF 		FB_RAND2.Num>0.9 
+	AND FB_RAND2.Num<1
+	THEN
+		lreal_Value2:=FB_RAND2.Num;
+END_IF
+
+IF 		FB_RAND3.Num>0.9 
+	AND FB_RAND3.Num<1
+	THEN
+		lreal_Value3:=FB_RAND3.Num;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A98_Reset" Id="{f9c05ffc-be1f-4518-8a67-2a573ccf9693}">
+      <Implementation>
+        <ST><![CDATA[IF 		
+		Instance_Drilling.SFCCurrentStep 		= 's1_02_Check_Part_Here'
+	AND Instance_Drilling1.SFCCurrentStep 		= 's1_02_Check_Part_Here'
+	AND Instance_Test_1.SFCCurrentStep 			= 's1_02_Check_Part_Here'
+	AND Instance_Test_2.SFCCurrentStep 			= 's1_02_Check_Part_Here'
+	AND Instance_Test_3.SFCCurrentStep 			= 's1_02_Check_Part_Here'
+	AND Instance_Metalization.SFCCurrentStep 	= 's1_02_Check_Part_Here'
+	AND m_ResetRobot
+	
+	THEN
+		m_ResetDone	:=1;
+	ELSE
+		m_ResetDone :=0;
+END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="A99_Communication" Id="{e462b3c2-6e64-4ff0-bb6c-6e6107343a82}">
+      <Implementation>
+        <ST><![CDATA[m_StartAuto 	:=BYTE_TO_BOOL(inRe_1_Byte_0);
+m_ResetRobot	:=BYTE_TO_BOOL(inRe_2_Byte_0);
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="PRG_Cell">
+      <LineId Id="115" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="389" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="91" Count="3" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="119" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A00_Conveyor">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A01_Robot">
+      <LineId Id="77" Count="1" />
+      <LineId Id="80" Count="18" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="99" Count="2" />
+      <LineId Id="59" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A02_Drilling">
+      <LineId Id="4" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A02_Drilling_2">
+      <LineId Id="8" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A03_Test_1">
+      <LineId Id="2" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A03_Test_2">
+      <LineId Id="2" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A03_Test_3">
+      <LineId Id="2" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A04_Metalization">
+      <LineId Id="2" Count="1" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A50_Optimization">
+      <LineId Id="1" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A97_RandomNumbers">
+      <LineId Id="1" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A98_Reset">
+      <LineId Id="19" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="20" Count="3" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Cell.A99_Communication">
+      <LineId Id="1" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

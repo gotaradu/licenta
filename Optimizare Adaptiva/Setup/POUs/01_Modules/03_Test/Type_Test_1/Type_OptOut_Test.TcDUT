@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_OptOut_Test" Id="{ccf9eb30-aa7d-42d9-a66f-e8b4be9e339a}">
+    <Declaration><![CDATA[TYPE Type_OptOut_Test :
+STRUCT
+	re_Test_1		:REAL;
+	re_Test_2		:REAL;
+	re_Test_3		:REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_Optimization" Id="{813970b1-b6c4-40f4-a379-0c61068809ba}">
+    <Declaration><![CDATA[TYPE Type_Optimization :
+STRUCT
+	out_AverageCycleTime		:REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

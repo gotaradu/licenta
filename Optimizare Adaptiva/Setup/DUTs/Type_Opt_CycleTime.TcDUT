@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_Opt_CycleTime" Id="{579eca02-3312-4e4e-abff-1d5959e09d8b}">
+    <Declaration><![CDATA[TYPE Type_Opt_CycleTime :
+STRUCT
+	re_Conveyor		:REAL;
+	re_Drilling_1	:REAL;
+	re_Drilling		:REAL;
+	re_Test_1		:REAL;
+	re_Test_2		:REAL;
+	re_Test_3		:REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

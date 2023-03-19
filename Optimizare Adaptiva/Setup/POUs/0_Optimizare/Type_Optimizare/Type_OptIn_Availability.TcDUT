@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_OptIn_Availability" Id="{cdc81557-4833-464d-ae58-236a9667a130}">
+    <Declaration><![CDATA[TYPE Type_OptIn_Availability :
+STRUCT
+	s_Drilling_1	:Type_AvailableModule;
+	s_Drilling_2	:Type_AvailableModule;
+	s_Test_1		:Type_AvailableModule;
+	s_Test_2		:Type_AvailableModule;
+	s_Test_3		:Type_AvailableModule;
+	s_Metalization	:Type_AvailableModule;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

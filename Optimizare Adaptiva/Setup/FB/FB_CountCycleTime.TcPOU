@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="FB_CountCycleTime" Id="{931e0e58-2971-4831-9b88-c665766b22bb}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_CountCycleTime
+
+{library public}
+(*----------------------INPUTS----------------------*)
+VAR_INPUT
+
+	inm_TimeActive			:BOOL;				(*counting cycle time active
+													TRUE = counting cycle time running / Messung läuft
+													FALSE = stop counting cycle time / Messung anhalten*)
+END_VAR
+
+(*----------------------OUTPUTS----------------------*)
+VAR_OUTPUT
+
+	outr_CycleTime			:REAL;				(*last counted cycle time [s] / zuletzt gemessene Zykluszeit [s]*)
+	outm_rtNewTime			:BOOL;				(*slope new cycleTime / Flanke neue Zykluszeit*)
+	outt_StartTime			:TIME;				(*last start time / letzter Startzeitpunkt*)
+
+END_VAR
+
+{library private}
+(*----------------------LOKAL VARIABLES-----------------*)
+VAR
+
+	rt_TimeActive			:R_TRIG;			(*positiv slope time active *)
+	ft_TimeActive			:F_TRIG;			(*negativ slope time active *)
+	t_StartTime				:TIME;				(*start time *)
+
+END_VAR
+
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* @END_DECLARATION := '0' *)
+(*start time*)
+(*------------------------------*)
+(*slope flag*)
+rt_TimeActive(CLK := inm_TimeActive );
+
+(*start timer with positive slope*)
+IF	(rt_TimeActive.Q = TRUE)
+THEN
+	(*get starting time*)
+	t_StartTime := TIME();
+	outt_StartTime := t_StartTime;
+END_IF
+
+
+(*stop time*)
+(*------------------------------*)
+(*slope flag*)
+ft_TimeActive(CLK := inm_TimeActive );
+outm_rtNewTime := ft_TimeActive.Q;
+
+(*stop timer with negativ slope*)
+IF	(ft_TimeActive.Q = TRUE)
+THEN
+	(*calc cycle time*)
+	outr_CycleTime := TIME_TO_REAL(  TIME() - t_StartTime)/1000 ;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_CountCycleTime">
+      <LineId Id="93" Count="25" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

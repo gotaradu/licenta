@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_CommIn_Optimization" Id="{50dd1f8f-3f4b-4aab-bbf6-231f0ee14838}">
+    <Declaration><![CDATA[TYPE Type_CommIn_Optimization :
+STRUCT
+	s_Conveyor		:Type_Optimization;	
+
+	s_Drilling_1	:Type_Optimization;
+	s_Drilling_2 	:Type_Optimization;
+	
+	s_Test_1	 	:Type_Optimization;
+	s_Test_2	 	:Type_Optimization;
+	s_Test_3	 	:Type_Optimization;
+		
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

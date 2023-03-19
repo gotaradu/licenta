@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_ModuleCommOut_Drilling" Id="{2eae327d-2a01-4499-b020-ec56f0a8fe60}">
+    <Declaration><![CDATA[TYPE Type_ModuleCommOut_Drilling :
+STRUCT
+	m_Ready					:BOOL;
+	m_Empty					:BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

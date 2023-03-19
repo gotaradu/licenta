@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_Opt_Timers" Id="{e3ef54d7-6088-4303-83e6-045bd4849efc}">
+    <Declaration><![CDATA[TYPE Type_Opt_Timers :
+STRUCT
+	T_Conveyor		:DWORD;
+	T_Drilling_1	:DWORD;
+	T_Drilling		:DWORD;
+	T_Test_1		:DWORD;
+	T_Test_2		:DWORD;
+	T_Test_3		:DWORD;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

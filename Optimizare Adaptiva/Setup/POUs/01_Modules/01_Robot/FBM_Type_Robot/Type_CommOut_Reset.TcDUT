@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_CommOut_Reset" Id="{a507ed3c-4de2-4b86-86c0-6b89c15d5141}">
+    <Declaration><![CDATA[TYPE Type_CommOut_Reset :
+STRUCT
+	outm_Reset_Drilling		:BOOL;
+	outm_Reset_Drilling2	:BOOL;
+	outm_Reset_Test1		:BOOL;
+	outm_Reset_Test2		:BOOL;
+	outm_Reset_Test3		:BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

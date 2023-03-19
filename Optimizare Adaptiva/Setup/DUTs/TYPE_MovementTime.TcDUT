@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="TYPE_MovementTime" Id="{ef0375e1-1021-4308-8dbc-8a2bc8fdadc1}">
+    <Declaration><![CDATA[TYPE TYPE_MovementTime :
+STRUCT
+	FirstStation		:INT;
+	SecondStation		:INT;
+	MovementTime		:REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

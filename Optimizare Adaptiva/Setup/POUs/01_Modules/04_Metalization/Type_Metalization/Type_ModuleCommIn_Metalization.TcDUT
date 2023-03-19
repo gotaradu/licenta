@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_ModuleCommIn_Metalization" Id="{212b3aac-2251-49a5-be92-452c637f60cc}">
+    <Declaration><![CDATA[TYPE Type_ModuleCommIn_Metalization :
+STRUCT
+	m_Work					:BOOL;
+	m_OutOfArea				:BOOL;
+	m_PartDropped			:BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

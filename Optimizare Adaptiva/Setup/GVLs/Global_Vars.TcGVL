@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <GVL Name="Global_Vars" Id="{eead97ae-1b4e-4585-8e89-5a83ebd50375}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL 
+	Orders 			: ARRAY [0..11] OF INT;
+	Order			: INT;
+											
+	time_Timer_RandomInput	:TIME;
+	lreal_RandomNumber		:LREAL;
+	
+END_VAR
+
+VAR_GLOBAL PERSISTENT
+	NoOfPartsDone	:INT;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

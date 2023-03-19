@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <Task Name="POU" Id="{f8cf02f7-accc-463b-86ad-f2940b801a6a}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>10000</CycleTime>
+    <Priority>6</Priority>
+    <PouCall>
+      <Name>PLC_PRG</Name>
+    </PouCall>
+    <TaskFBGuid>{b663ff69-60ae-4dea-8215-71b2be6ebb25}</TaskFBGuid>
+    <Fb_init>{135560cb-746b-491d-bafd-fc4db782837a}</Fb_init>
+    <Fb_exit>{38e0a993-d13f-43c7-9455-0650a1261793}</Fb_exit>
+    <CycleUpdate>{646b8437-9c6e-4d42-a1d1-c7e211c05564}</CycleUpdate>
+    <PostCycleUpdate>{6a3f6419-818c-4c98-929a-4bf89cf5c82f}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

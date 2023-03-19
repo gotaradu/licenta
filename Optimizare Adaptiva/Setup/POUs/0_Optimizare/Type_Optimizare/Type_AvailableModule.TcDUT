@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_AvailableModule" Id="{84709c1e-54c8-4c8f-8172-11eb49b384f3}">
+    <Declaration><![CDATA[TYPE Type_AvailableModule :
+STRUCT
+	m_Available	:BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_ModuleCommOut_Test" Id="{e53c824e-919f-4081-ad58-98f3b75787f0}">
+    <Declaration><![CDATA[TYPE Type_ModuleCommOut_Test :
+STRUCT
+	m_Ready					:BOOL;
+	m_Empty					:BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

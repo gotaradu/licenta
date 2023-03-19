@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_OptOut_Drilling" Id="{2341ef33-b949-438e-a8ef-4ae15e67d535}">
+    <Declaration><![CDATA[TYPE Type_OptOut_Drilling :
+STRUCT
+	re_Drilling_1		:REAL;
+	re_Drilling_2		:REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

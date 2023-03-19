@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="Type_CommOut_Metalization" Id="{07fe8381-e608-4a67-81a0-9b2305d9a665}">
+    <Declaration><![CDATA[TYPE Type_CommOut_Metalization :
+STRUCT
+	s_Robot		:Type_ModuleCommOut_Metalization;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

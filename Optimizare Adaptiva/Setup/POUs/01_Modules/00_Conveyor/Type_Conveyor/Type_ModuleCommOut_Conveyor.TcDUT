@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_ModuleCommOut_Conveyor" Id="{f6c50696-fdd9-4f25-a5ea-49a26e8e6892}">
+    <Declaration><![CDATA[TYPE Type_ModuleCommOut_Conveyor :
+STRUCT
+	m_Ready					:BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

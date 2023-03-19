@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_CommIn_Robot" Id="{2058f54f-68ad-46d1-84ec-02444e57f1a8}">
+    <Declaration><![CDATA[TYPE Type_CommIn_Robot :
+STRUCT
+	
+	s_Conveyor 					:Type_ModuleCommOut_Conveyor;
+	s_Drilling					:Type_ModuleCommOut_Drilling;
+	s_Drilling1					:Type_ModuleCommOut_Drilling;
+	s_Metalization				:Type_ModuleCommOut_Metalization;
+	s_Test_1					:Type_ModuleCommOut_Test;
+	s_Test_2					:Type_ModuleCommOut_Test;
+	s_Test_3					:Type_ModuleCommOut_Test;
+		
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

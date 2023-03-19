@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="FB_RobotMovementTime" Id="{f1249df3-61aa-4489-8b11-cfaeec635c41}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_RobotMovementTime
+VAR_INPUT
+	inm_Couting				:BOOL;
+	inint_FirstStation		:INT	:=-1;
+	inint_SecondStation		:INT	:=-1;
+END_VAR
+VAR_OUTPUT
+	outs_MovementTime		:TYPE_MovementTime;
+END_VAR
+VAR
+	rt_TimeActive			:R_TRIG;
+	ft_TimeActive			:F_TRIG;
+	t_StartTime				:TIME;
+	
+END_VAR	
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[rt_TimeActive(CLK:=inm_Couting);
+
+IF rt_TimeActive.Q
+	THEN
+	t_StartTime:=TIME();
+END_IF
+
+ft_TimeActive(CLK:=inm_Couting);
+
+IF ft_TimeActive.Q
+	THEN
+	outs_MovementTime.FirstStation:=inint_FirstStation;
+	outs_MovementTime.SecondStation:=inint_SecondStation;
+	outs_MovementTime.MovementTime:=TIME_TO_REAL(TIME() - t_StartTime)/1000;
+END_IF
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_RobotMovementTime">
+      <LineId Id="47" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="37" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

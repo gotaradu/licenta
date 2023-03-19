@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_CommIn_Test" Id="{d7a60eba-916a-414f-88cd-35f024339322}">
+    <Declaration><![CDATA[TYPE Type_CommIn_Test :
+STRUCT
+	s_Robot			:Type_ModuleCommIn_Test;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="ENUM_Order" Id="{5588a144-edb3-4795-9b38-72d5babc4835}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE ENUM_Order :
+(	
+	
+	NoOrder			:= 0,
+	BaseMove		:= 100,
+	
+	Pick_Conveyor		:= 10,
+	Pick_Drilling1		:= 11,
+	Pick_Drilling		:= 12,
+	Pick_Metalization	:= 13,	
+	Pick_Test_1			:= 14,
+	Pick_Test_2			:= 15,
+	Pick_Test_3			:= 16,
+	
+	Place_Drilling		:= 22,
+	Place_Drilling2		:= 21,
+	Place_Test_1		:= 23,
+	Place_Test_2		:= 24,
+	Place_Test_3		:= 25,
+	Place_Metalization	:= 26	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

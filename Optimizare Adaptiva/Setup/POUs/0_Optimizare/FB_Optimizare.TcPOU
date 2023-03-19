@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="FB_Optimizare" Id="{1060591f-2692-4157-9742-5948cbac02ed}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Optimizare
+VAR_INPUT
+	
+	inm_OrderAccepted		:BOOL;
+	inint_NoJobAvailable	:ENUM_Order;
+	inint_LastPosition 		:INT;
+	indword_StartTime		:Type_Opt_Timers;
+	inreal_AverageCycleTime	:Type_Opt_CycleTime;
+	inm_AvailableModules	:Type_OptIn_Availability;
+	
+	
+END_VAR
+VAR_OUTPUT
+	outint_FinalPosition	:INT;	// returneaza o pozitie pentru robot;
+END_VAR
+VAR
+	int_CurrentPosition		:INT;
+	
+	real_MovementTime		:ARRAY [0..6,0..6] OF REAL := [	0, 3.42, 3.74, 4.54, 5.53, 5.18, 0,
+															3.42, 0, 3.32, 3.61, 4.2, 3.96, 5.24,
+															3.88, 3.5, 0, 2.21, 4.3, 3.46, 4.48,
+															4.54, 3.61, 2.21, 0, 0, 0, 4.12,
+															5.62, 4.2, 4.3, 0, 0, 0, 6,
+															5.18, 3.96, 3.46, 0, 0, 0, 4.19,
+															0, 5.24, 4.48, 4.12, 6, 4.19, 0];
+	
+	real_MinTime			:REAL;
+	
+	real_ShortestTime		:ARRAY[0..5] OF REAL;
+	real_ModuleAverageTime	:ARRAY[0..5] OF REAL;
+	real_ModuleStartTime: ARRAY [0..5] OF REAL;
+	
+	int_FinalPos			:INT;
+	int_FinalPos2			:INT;
+	int_index				:INT;
+	int_index2				:INT;
+	
+	m_Ok					:BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[A99_Communication();
+
+IF inint_NoJobAvailable = ENUM_Order.NoOrder
+	THEN
+	FOR int_index:=0 TO 5
+		DO
+		real_ShortestTime[int_index]:=real_ModuleStartTime[int_index] + real_MovementTime[int_CurrentPosition,int_index] + real_ModuleAverageTime[int_index];				
+	END_FOR
+	
+	FOR int_index:=0 TO 5
+		DO
+		real_MinTime:=MIN(real_ShortestTime[0],real_ShortestTime[1],real_ShortestTime[2],real_ShortestTime[3],real_ShortestTime[4],real_ShortestTime[5]);
+		
+		FOR int_index2:=0 TO 5
+			DO
+			IF real_MinTime = real_ShortestTime[int_index2]
+				THEN
+				int_FinalPos:=int_index2;
+			END_IF
+		END_FOR		
+		
+		CASE int_FinalPos OF
+		
+		0:	IF inm_AvailableModules.s_Drilling_1.m_Available
+				OR inm_AvailableModules.s_Drilling_2.m_Available
+				THEN
+				outint_FinalPosition := 0;
+				ELSE
+				real_ShortestTime[int_FinalPos]:=10000;
+			END_IF 
+			
+		1:	IF inm_AvailableModules.s_Test_1.m_Available 
+			OR inm_AvailableModules.s_Test_2.m_Available
+			OR inm_AvailableModules.s_Test_3.m_Available				
+				THEN
+				outint_FinalPosition := 1;
+				ELSE
+				real_ShortestTime[int_FinalPos]:=10000;
+			END_IF 
+		2:	IF inm_AvailableModules.s_Test_1.m_Available 
+			OR inm_AvailableModules.s_Test_2.m_Available
+			OR inm_AvailableModules.s_Test_3.m_Available
+				THEN
+				outint_FinalPosition := 2;
+				ELSE
+				real_ShortestTime[int_FinalPos]:=10000;
+			END_IF 
+			
+		3:	IF inm_AvailableModules.s_Metalization.m_Available 
+				THEN
+				outint_FinalPosition := 3;
+				ELSE
+				real_ShortestTime[int_FinalPos]:=10000;
+			END_IF 
+		4:	IF inm_AvailableModules.s_Metalization.m_Available 
+				THEN
+				outint_FinalPosition := 4;
+				ELSE
+				real_ShortestTime[int_FinalPos]:=10000;
+			END_IF 
+		5:	IF inm_AvailableModules.s_Metalization.m_Available 
+				THEN
+				outint_FinalPosition := 5;
+				ELSE
+				real_ShortestTime[int_FinalPos]:=10000;
+			END_IF 
+			
+	END_CASE
+	END_FOR
+	
+	IF NOT inm_AvailableModules.s_Metalization.m_Available
+		AND NOT inm_AvailableModules.s_Drilling_1.m_Available
+		AND NOT inm_AvailableModules.s_Drilling_2.m_Available
+		AND NOT inm_AvailableModules.s_Test_1.m_Available
+		AND NOT inm_AvailableModules.s_Test_2.m_Available
+		AND NOT inm_AvailableModules.s_Test_3.m_Available
+		THEN
+			
+			IF real_ModuleStartTime[3]<real_ModuleStartTime[4]
+				AND real_ModuleStartTime[3]<real_ModuleStartTime[5]
+				THEN
+					outint_FinalPosition:=3;
+			ELSIF real_ModuleStartTime[4]<real_ModuleStartTime[3]
+				AND real_ModuleStartTime[4]<real_ModuleStartTime[5]
+				THEN
+					outint_FinalPosition:=4;
+			ELSIF real_ModuleStartTime[5]<real_ModuleStartTime[4]
+				AND real_ModuleStartTime[5]<real_ModuleStartTime[3]
+				THEN
+					outint_FinalPosition:=5;
+			END_IF
+	END_IF
+	
+	ELSE
+		outint_FinalPosition:=-1;
+END_IF
+
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="A99_Communication" Id="{ea020ac2-cbb1-48fd-9380-663624068f25}">
+      <Implementation>
+        <ST><![CDATA[real_ModuleAverageTime[0] 	:= inreal_AverageCycleTime.re_Conveyor;
+real_ModuleAverageTime[1] 	:= inreal_AverageCycleTime.re_Drilling_1;
+real_ModuleAverageTime[2] 	:= inreal_AverageCycleTime.re_Drilling;
+real_ModuleAverageTime[3] 	:= inreal_AverageCycleTime.re_Test_1;
+real_ModuleAverageTime[4] 	:= inreal_AverageCycleTime.re_Test_2;
+real_ModuleAverageTime[5] 	:= inreal_AverageCycleTime.re_Test_3;
+
+real_ModuleStartTime[0] 	:= (DWORD_TO_REAL(indword_StartTime.T_Conveyor)-6400000)/10000;
+real_ModuleStartTime[1] 	:= (DWORD_TO_REAL(indword_StartTime.T_Drilling_1)-6400000)/10000;
+real_ModuleStartTime[2] 	:= (DWORD_TO_REAL(indword_StartTime.T_Drilling)-6400000)/10000;
+real_ModuleStartTime[3] 	:= (DWORD_TO_REAL(indword_StartTime.T_Test_1)-6400000)/10000;
+real_ModuleStartTime[4] 	:= (DWORD_TO_REAL(indword_StartTime.T_Test_2)-6400000)/10000;
+real_ModuleStartTime[5] 	:= (DWORD_TO_REAL(indword_StartTime.T_Test_3)-6400000)/10000;
+
+
+int_CurrentPosition:=inint_LastPosition;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_Optimizare">
+      <LineId Id="34" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="135" Count="2" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="154" Count="1" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="277" Count="1" />
+      <LineId Id="281" Count="2" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="232" Count="4" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="287" Count="1" />
+      <LineId Id="239" Count="5" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="289" Count="1" />
+      <LineId Id="247" Count="4" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="291" Count="1" />
+      <LineId Id="254" Count="3" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="293" Count="1" />
+      <LineId Id="260" Count="2" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="295" Count="1" />
+      <LineId Id="265" Count="2" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="297" Count="1" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="274" Count="0" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="461" Count="0" />
+      <LineId Id="463" Count="7" />
+      <LineId Id="472" Count="0" />
+      <LineId Id="474" Count="0" />
+      <LineId Id="479" Count="0" />
+      <LineId Id="475" Count="1" />
+      <LineId Id="480" Count="0" />
+      <LineId Id="477" Count="0" />
+      <LineId Id="481" Count="1" />
+      <LineId Id="484" Count="2" />
+      <LineId Id="478" Count="0" />
+      <LineId Id="471" Count="0" />
+      <LineId Id="462" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="338" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="459" Count="1" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="144" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Optimizare.A99_Communication">
+      <LineId Id="1" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="3" Count="2" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="4" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

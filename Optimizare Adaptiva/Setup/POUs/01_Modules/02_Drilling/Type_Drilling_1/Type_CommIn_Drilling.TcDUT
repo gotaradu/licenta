@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="Type_CommIn_Drilling" Id="{6188ec8b-775b-4fe5-abb5-a5764af8981c}">
+    <Declaration><![CDATA[TYPE Type_CommIn_Drilling :
+STRUCT
+	s_Robot			:	Type_ModuleCommIn_Drilling;
+	s_Test_1		:	Type_ModuleCommOut_Test;
+	s_Test_2 		:	Type_ModuleCommOut_Test;
+	s_Test_3 		:	Type_ModuleCommOut_Test;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

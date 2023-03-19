@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="Type_CommIn_Conveyor" Id="{587db6c3-df60-4630-80e2-75fc91558d24}">
+    <Declaration><![CDATA[TYPE Type_CommIn_Conveyor :
+STRUCT
+	s_Robot			:Type_ModuleCommIn_Conveyor;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

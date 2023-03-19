@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <DUT Name="enum_RetVal" Id="{34ba5fab-c758-4b18-be02-d09ff8950a78}">
+    <Declaration><![CDATA[TYPE enum_RetVal :
+(
+	Ok			:= 1,
+	Running		:= 0,
+	
+	JP0			:=10,
+	JP1			:=11,
+	JP2			:=12,
+	JP3			:=13,
+	JP4			:=14,
+	JP5			:=15,
+	JP6			:=16,
+	
+	JP11,
+	JP22,
+	JP33,
+	JP44,
+	JP55,
+	JP66
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
